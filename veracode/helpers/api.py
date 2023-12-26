@@ -16,8 +16,8 @@ import re
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC
 from helpers.exceptions import VeracodeAPIError
 from helpers.exceptions import VeracodeError
-import xml.etree.ElementTree as ET
 import configparser
+import defusedxml.ElementTree
 
 
 class VeracodeAPI:
@@ -179,7 +179,7 @@ class VeracodeAPI:
             return None
         else:
             ns = {'vc': 'https://analysiscenter.veracode.com/schema/2.0/prescanresults'}
-            root = ET.fromstring(prescan_xml)
+            root = defusedxml.ElementTree.fromstring(prescan_xml)
             find_modules_query = "./vc:module[@has_fatal_errors='false']"
             module_nodes = root.findall(find_modules_query, ns)
             retval = {}
@@ -251,7 +251,7 @@ class VeracodeAPI:
         """Returns an app_id for the given app_name or None if it isn't found"""
         latest_app_profiles_xml = self.get_app_list()
         ns = {'vc': 'https://analysiscenter.veracode.com/schema/2.0/applist'}
-        root = ET.fromstring(latest_app_profiles_xml)
+        root = defusedxml.ElementTree.fromstring(latest_app_profiles_xml)
         find_app_id_query = "./vc:app[@app_name='" + app_name + "']"
         app_node = root.findall(find_app_id_query, ns)
         if len(app_node) == 1:

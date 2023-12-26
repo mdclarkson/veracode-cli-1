@@ -16,8 +16,8 @@ from requests.adapters import HTTPAdapter
 from veracode_api_signing.plugin_requests import RequestsAuthPluginVeracodeHMAC
 from helpers.exceptions import VeracodeAPIError
 from helpers.exceptions import VeracodeError
-import xml.etree.ElementTree as ET
 import configparser
+import defusedxml.ElementTree
 
 
 class VeracodeAPI:
@@ -95,7 +95,7 @@ class VeracodeAPI:
     def create_build(self, app_id, name):
         build_xml = self._get_request(self.baseurl + "/5.0/createbuild.do", params={"app_id": app_id,
                                                                                 "version": name})
-        root = ET.fromstring(build_xml)
+        root = defusedxml.ElementTree.fromstring(build_xml)
         build_id = root.attrib.get("build_id")
         return build_id
 
@@ -114,7 +114,7 @@ class VeracodeAPI:
             return None
         else:
             ns = {'vc': 'https://analysiscenter.veracode.com/schema/2.0/prescanresults'}
-            root = ET.fromstring(prescan_xml)
+            root = defusedxml.ElementTree.fromstring(prescan_xml)
             find_modules_query = "./vc:module[@has_fatal_errors='false']"
             module_nodes = root.findall(find_modules_query, ns)
             retval = {}
@@ -127,7 +127,7 @@ class VeracodeAPI:
         build_info_xml =  self._get_request(self.baseurl + "/5.0/getbuildinfo.do", params={"app_id": app_id,
                                                                               "build_id": build_id})
         ns = {'vc': 'https://analysiscenter.veracode.com/schema/4.0/buildinfo'}
-        root = ET.fromstring(build_info_xml)
+        root = defusedxml.ElementTree.fromstring(build_info_xml)
         find_build_query = "./vc:build"
         build_node = root.findall(find_build_query, ns)
         if len(build_node) == 1:
@@ -150,7 +150,7 @@ class VeracodeAPI:
         """Returns an app_id for the given app_name or None if it isn't found"""
         latest_app_profiles_xml = self.get_app_list()
         ns = {'vc': 'https://analysiscenter.veracode.com/schema/2.0/applist'}
-        root = ET.fromstring(latest_app_profiles_xml)
+        root = defusedxml.ElementTree.fromstring(latest_app_profiles_xml)
         find_app_id_query = "./vc:app[@app_name='" + app_name + "']"
         app_node = root.findall(find_app_id_query, ns)
         if len(app_node) == 1:

@@ -11,7 +11,7 @@ setup(
     description="A rich CLI for interacting with Veracode services",
     install_requires=[
         "requests >= 2.18.4",
-        "pytz >= 2018.4",
+        "pytz >= 2018.4","defusedxml~=0.7.1"
     ],
     entry_points={
         "console_scripts": ["veracode-cli = veracode.veracode-cli:start"]
