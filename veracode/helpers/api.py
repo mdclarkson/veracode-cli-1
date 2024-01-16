@@ -50,7 +50,7 @@ class VeracodeAPI:
         try:
             files = {'file': open(filename, 'rb')}
             r = requests.post(url, auth=RequestsAuthPluginVeracodeHMAC(self.api_key_id, self.api_key_secret),
-                             files=files, params=params, proxies=self.proxies)
+                             files=files, params=params, proxies=self.proxies, timeout=60)
             if 200 >= r.status_code <= 299:
                 if r.content is None:
                     logging.debug("HTTP response body empty:\r\n{}\r\n{}\r\n{}\r\n\r\n{}\r\n{}\r\n{}\r\n"
@@ -71,7 +71,7 @@ class VeracodeAPI:
     def _get_request(self, url, params=None):
         try:
             r = requests.get(url, auth=RequestsAuthPluginVeracodeHMAC(self.api_key_id, self.api_key_secret),
-                             params=params, proxies=self.proxies)
+                             params=params, proxies=self.proxies, timeout=60)
             if 200 >= r.status_code <= 299:
                 if r.content is None:
                     logging.debug("HTTP response body empty:\r\n{}\r\n{}\r\n{}\r\n\r\n{}\r\n{}\r\n{}\r\n"
