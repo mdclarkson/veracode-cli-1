@@ -12,6 +12,7 @@ setup(
     install_requires=[
         "requests >= 2.18.4",
         "pytz >= 2018.4",
+        "security==1.3.0",
     ],
     entry_points={
         "console_scripts": ["veracode-cli = veracode.veracode-cli:start"]
