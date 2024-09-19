@@ -12,6 +12,7 @@ from abc import ABC
 from abc import abstractmethod
 from lxml import etree
 import xmltodict
+import lxml.etree
 
 
 class BaseSynchroniser(ABC):
@@ -30,7 +31,7 @@ class BaseSynchroniser(ABC):
         """ find all flaws that could be relevant """
         ns = {'vc': 'https://www.veracode.com/schema/reports/export/1.0'}
         #root = ET.fromstring(detailed_report_xml)
-        root = etree.fromstring(detailed_report_xml)
+        root = etree.fromstring(detailed_report_xml, parser=lxml.etree.XMLParser(resolve_entities=False))
         find_categories_query = "./vc:severity/vc:category[vc:cwe/vc:staticflaws/vc:flaw"
         if config["sync_filter"] == "policy_affecting":
             find_categories_query = find_categories_query + "/@affects_policy_compliance='true']"
