@@ -119,7 +119,7 @@ def execute(api, activities):
 #        config = json.load(json_file)
 
     with open('veracode.yaml') as yaml_file:
-        config = yaml.load(yaml_file)
+        config = yaml.load(yaml_file, Loader=yaml.SafeLoader)
 
     for activity in config:
         if activities is None or activities == activity["name"]:
