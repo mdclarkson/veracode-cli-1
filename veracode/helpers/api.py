@@ -18,6 +18,7 @@ from helpers.exceptions import VeracodeAPIError
 from helpers.exceptions import VeracodeError
 import xml.etree.ElementTree as ET
 import configparser
+from security import safe_requests
 
 
 class VeracodeAPI:
@@ -70,7 +71,7 @@ class VeracodeAPI:
 
     def _get_request(self, url, params=None):
         try:
-            r = requests.get(url, auth=RequestsAuthPluginVeracodeHMAC(self.api_key_id, self.api_key_secret),
+            r = safe_requests.get(url, auth=RequestsAuthPluginVeracodeHMAC(self.api_key_id, self.api_key_secret),
                              params=params, proxies=self.proxies)
             if 200 >= r.status_code <= 299:
                 if r.content is None:
